@@ -1,27 +1,8 @@
 import discord
 import requests
 import os
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
-# --- クラウド(Render)のシステム用ダミーサーバー（24時間稼働のため） ---
-class DummyHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(b"Bot is alive!")
-
-def run_dummy_server():
-    port = int(os.environ.get('PORT', 8080))
-    server = HTTPServer(('0.0.0.0', port), DummyHandler)
-    server.serve_forever()
-
-threading.Thread(target=run_dummy_server, daemon=True).start()
-
-
-# --- ここからいつものBotのコード ---
-# 鍵は直接書かず、クラウド（Render）の金庫設定から安全に読み込みます
+# 鍵はRenderの環境変数から安全に読み込みます
 DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
 DIFY_API_KEY = os.environ.get('DIFY_API_KEY')
 DIFY_API_URL = 'https://api.dify.ai/v1/chat-messages'
